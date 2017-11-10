@@ -1,0 +1,11 @@
+name: BuildPlugin
+author: ByteList
+version: 1.0
+main: de.gamechest.buildplugin.BuildPlugin
+
+commands:
+   gamemode:
+      aliases: [gm]
+   speed:
+   buildmode:
+   buildconnect:
