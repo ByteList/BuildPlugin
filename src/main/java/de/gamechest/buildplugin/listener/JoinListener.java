@@ -47,6 +47,10 @@ public class JoinListener implements Listener {
                 pos = "001";
                 break;
         }
+        /*
+        ConsolemasterMC : Admin-1 -> 0011_custom
+        ByteList : Dev-2 -> 0012_custom
+         */
         TabList.updateCustom(player, pos+rank.getId(), buildMode.getColor()+buildMode.getShortName()+" §8\u00BB "+rank.getColor(), "§r");
         e.setJoinMessage("§8\u00BB "+gameChest.getDisplayname(player)+"§7 hat den Server betreten. ("+buildMode.getColor()+buildMode.getName()+"§7)");
     }

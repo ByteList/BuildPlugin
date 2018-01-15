@@ -2,10 +2,7 @@ package de.gamechest.buildplugin;
 
 import de.gamechest.GameChest;
 import de.gamechest.buildplugin.command.*;
-import de.gamechest.buildplugin.listener.AsyncPlayerChatListener;
-import de.gamechest.buildplugin.listener.JoinListener;
-import de.gamechest.buildplugin.listener.LoginListener;
-import de.gamechest.buildplugin.listener.QuitListener;
+import de.gamechest.buildplugin.listener.*;
 import de.gamechest.buildplugin.task.CheckGamemodeTask;
 import de.gamechest.buildplugin.util.BuildMode;
 import de.gamechest.buildplugin.util.PlayerManager;
@@ -42,7 +39,8 @@ public class BuildPlugin extends JavaPlugin {
                 new JoinListener(),
                 new LoginListener(),
                 new QuitListener(),
-                new AsyncPlayerChatListener()
+                new AsyncPlayerChatListener(),
+                new ServerPingListener()
         };
 
         for(Listener listener : listeners) {
@@ -50,7 +48,6 @@ public class BuildPlugin extends JavaPlugin {
         }
 
         getServer().getPluginCommand("nick").setExecutor(new DisabledCommand());
-        getServer().getPluginCommand("chatlog").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("opme").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("serverid").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("fakeplugins").setExecutor(new DisabledCommand());
