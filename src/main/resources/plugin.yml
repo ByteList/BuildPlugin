@@ -1,6 +1,7 @@
 name: BuildPlugin
 author: ByteList
-version: 1.0
+version: mvn:unknown
+#description
 main: de.gamechest.buildplugin.BuildPlugin
 
 commands:
