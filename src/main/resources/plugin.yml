@@ -4,9 +4,13 @@ version: mvn:unknown
 #description
 main: de.gamechest.buildplugin.BuildPlugin
 
+loadbefore: [WorldEdit]
+
 commands:
    gamemode:
       aliases: [gm]
    speed:
    buildmode:
    buildconnect:
+   loadschematic:
+     aliases: [loadsch]

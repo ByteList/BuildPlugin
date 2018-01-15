@@ -56,6 +56,7 @@ public class BuildPlugin extends JavaPlugin {
         getCommand("speed").setExecutor(new SpeedCommand());
         getCommand("buildconnect").setExecutor(new BuildConnectCommand());
         getCommand("buildmode").setExecutor(new BuildModeCommand());
+        getCommand("loadschematic").setExecutor(new LoadSchematicCommand());
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, new CheckGamemodeTask(), 10L, 10L);
 
