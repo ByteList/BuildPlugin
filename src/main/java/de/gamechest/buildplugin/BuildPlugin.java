@@ -30,10 +30,14 @@ public class BuildPlugin extends JavaPlugin {
     @Getter
     private PlayerManager playerManager;
 
+    @Getter
+    private PermissionManager permissionManager;
+
     @Override
     public void onEnable() {
         instance = this;
         this.playerManager = new PlayerManager();
+        this.permissionManager = new PermissionManager();
 
         Listener[] listeners = {
                 new JoinListener(),

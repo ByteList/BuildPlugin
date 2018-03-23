@@ -1,12 +1,10 @@
 package de.gamechest.buildplugin.listener;
 
-import de.gamechest.BountifulAPI;
 import de.gamechest.GameChest;
 import de.gamechest.buildplugin.BuildPlugin;
 import de.gamechest.database.DatabaseManager;
 import de.gamechest.database.DatabasePlayer;
 import de.gamechest.database.DatabasePlayerObject;
-import de.gamechest.database.rank.Rank;
 import de.gamechest.database.uuidbuffer.DatabaseUuidBuffer;
 import org.bson.Document;
 import org.bukkit.entity.Player;
@@ -61,5 +59,7 @@ public class LoginListener implements Listener {
         }
 
         BuildPlugin.getInstance().getPlayerManager().configurationsCache.put(player.getUniqueId(), configurations);
+
+        BuildPlugin.getInstance().getPermissionManager().setPlotPermissions(player, true);
     }
 }
