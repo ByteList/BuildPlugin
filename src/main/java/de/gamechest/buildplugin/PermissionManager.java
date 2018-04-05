@@ -39,11 +39,11 @@ public class PermissionManager {
         }
 
         if(b) {
-            for(String perm : permissions)
-                permissionAttachment.setPermission(perm, true);
+            for(String perm : permissions) permissionAttachment.setPermission(perm, true);
         } else {
-            for(String perm : permissions)
-                permissionAttachment.unsetPermission(perm);
+            for(String perm : permissions) permissionAttachment.unsetPermission(perm);
+            player.removeAttachment(permissionAttachment);
+            permissionAttachments.remove(player.getUniqueId());
         }
     }
 }
