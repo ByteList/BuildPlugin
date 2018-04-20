@@ -23,7 +23,10 @@ public class PermissionManager {
 
     public String[] getPlotPermissions() {
         return new String[] {
-                "worldedit.*"
+                "worldedit.*",
+                "voxelsniper.brush.*",
+                "voxelsniper.sniper",
+                "voxelsniper.goto"
         };
     }
 
