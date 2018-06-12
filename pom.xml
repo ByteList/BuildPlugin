@@ -31,7 +31,7 @@
         </repository>
         <repository>
             <id>byte-repo</id>
-            <url>https://vs.bytelist.de/nexus/repository/byte-repo/</url>
+            <url>https://kvm.bytelist.de/nexus/repository/byte-repo/</url>
         </repository>
     </repositories>
 

@@ -61,17 +61,17 @@ public class BuildModeCommand implements TabExecutor {
 
             switch (buildMode) {
                 case SPECTATE:
-                    pos = "0003";
+                    pos = "003";
                     target.setOp(false);
                     target.setGameMode(GameMode.SPECTATOR);
                     break;
                 case BUILD:
-                    pos = "0002";
+                    pos = "002";
                     target.setOp(false);
                     target.setGameMode(GameMode.CREATIVE);
                     break;
                 case OPERATOR:
-                    pos = "0001";
+                    pos = "001";
                     target.setOp(true);
                     target.setGameMode(GameMode.CREATIVE);
                     break;
