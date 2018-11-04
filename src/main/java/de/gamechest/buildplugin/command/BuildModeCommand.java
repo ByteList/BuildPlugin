@@ -3,7 +3,7 @@ package de.gamechest.buildplugin.command;
 import de.gamechest.GameChest;
 import de.gamechest.TabList;
 import de.gamechest.buildplugin.BuildPlugin;
-import de.gamechest.buildplugin.util.BuildMode;
+import de.gamechest.buildplugin.BuildMode;
 import de.gamechest.database.DatabasePlayerObject;
 import de.gamechest.database.rank.Rank;
 import org.bson.Document;

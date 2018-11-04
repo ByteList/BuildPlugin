@@ -2,7 +2,7 @@ package de.gamechest.buildplugin.listener;
 
 import de.gamechest.GameChest;
 import de.gamechest.buildplugin.BuildPlugin;
-import de.gamechest.buildplugin.util.BuildMode;
+import de.gamechest.buildplugin.BuildMode;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

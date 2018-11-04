@@ -1,4 +1,4 @@
-package de.gamechest.buildplugin.util;
+package de.gamechest.buildplugin;
 
 import org.bson.Document;
 

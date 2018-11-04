@@ -2,7 +2,7 @@ package de.gamechest.buildplugin.command;
 
 import de.gamechest.GameChest;
 import de.gamechest.buildplugin.BuildPlugin;
-import de.gamechest.buildplugin.util.BuildMode;
+import de.gamechest.buildplugin.BuildMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

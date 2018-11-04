@@ -4,8 +4,6 @@ import de.gamechest.GameChest;
 import de.gamechest.buildplugin.command.*;
 import de.gamechest.buildplugin.listener.*;
 import de.gamechest.buildplugin.task.CheckGamemodeTask;
-import de.gamechest.buildplugin.util.BuildMode;
-import de.gamechest.buildplugin.util.PlayerManager;
 import de.gamechest.database.DatabasePlayer;
 import de.gamechest.database.DatabasePlayerObject;
 import lombok.Getter;
@@ -44,7 +42,9 @@ public class BuildPlugin extends JavaPlugin {
                 new LoginListener(),
                 new QuitListener(),
                 new AsyncPlayerChatListener(),
-                new ServerPingListener()
+                new ServerPingListener(),
+                new BlockListener(),
+                new PlayerInteractListener()
         };
 
         for(Listener listener : listeners) {
@@ -55,12 +55,14 @@ public class BuildPlugin extends JavaPlugin {
         getServer().getPluginCommand("opme").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("serverid").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("fakeplugins").setExecutor(new DisabledCommand());
+        getServer().getPluginCommand("kill").setExecutor(new DisabledCommand());
 
         getCommand("gamemode").setExecutor(new GamemodeCommand());
         getCommand("speed").setExecutor(new SpeedCommand());
         getCommand("buildconnect").setExecutor(new BuildConnectCommand());
         getCommand("buildmode").setExecutor(new BuildModeCommand());
         getCommand("loadschematic").setExecutor(new LoadSchematicCommand());
+        getCommand("blockinfo").setExecutor(new BlockInfoCommand());
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, new CheckGamemodeTask(), 10L, 10L);
 

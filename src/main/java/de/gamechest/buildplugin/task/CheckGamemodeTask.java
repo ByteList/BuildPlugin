@@ -1,7 +1,7 @@
 package de.gamechest.buildplugin.task;
 
 import de.gamechest.buildplugin.BuildPlugin;
-import de.gamechest.buildplugin.util.BuildMode;
+import de.gamechest.buildplugin.BuildMode;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
