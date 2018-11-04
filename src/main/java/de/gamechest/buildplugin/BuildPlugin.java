@@ -55,7 +55,7 @@ public class BuildPlugin extends JavaPlugin {
         getServer().getPluginCommand("opme").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("serverid").setExecutor(new DisabledCommand());
         getServer().getPluginCommand("fakeplugins").setExecutor(new DisabledCommand());
-        getServer().getPluginCommand("kill").setExecutor(new DisabledCommand());
+        getCommand("kill").setExecutor(new DisabledCommand());
 
         getCommand("gamemode").setExecutor(new GamemodeCommand());
         getCommand("speed").setExecutor(new SpeedCommand());
