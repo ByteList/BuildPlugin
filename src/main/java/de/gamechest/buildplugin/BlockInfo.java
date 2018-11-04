@@ -141,10 +141,11 @@ public class BlockInfo {
 
         public void show(Player player) {
             GameChest.getInstance().getDatabaseManager().getAsync().getPlayer(UUID.fromString(this.uuid), dbPlayer-> {
-                player.sendMessage(buildPlugin.prefix+"§eBlockInfo:");
-                player.sendMessage("§8\u00BB §7Location: §e"+location.getBlockX()+", "+location.getBlockY()+", "+location.getBlockZ());
-                player.sendMessage("§8\u00BB §7Spieler: §c"+ dbPlayer.getDatabaseElement(DatabasePlayerObject.LAST_NAME).getAsString());
-                player.sendMessage("§8\u00BB §7Material: §a"+this.material.name());
+                player.sendMessage(
+                        "§8\u00BB §7Location: §e"+location.getBlockX()+", "+location.getBlockY()+", "+location.getBlockZ() +
+                        "§8, §7Spieler: §c"+ dbPlayer.getDatabaseElement(DatabasePlayerObject.LAST_NAME).getAsString() +
+                        "§8, §7Material: §a"+this.material
+                );
 //                player.sendMessage("§8\u00BB §7SavedString: "+this.savedString);
             }, DatabasePlayerObject.LAST_NAME);
 
