@@ -85,9 +85,9 @@ public class BlockInfo {
         Block block = new Block(
                 new Location(Bukkit.getWorld(world), x, y, z),
                 this.configuration.getString(path + ".uuid"),
-                this.configuration.getString(path + ".material"),
-                Byte.valueOf(this.configuration.getString(path + ".data")),
-                this.configuration.getString(path + ".savedString")
+                this.configuration.getString(path + ".block.material"),
+                Byte.valueOf(this.configuration.getString(path + ".block.data")),
+                this.configuration.getString(path + ".block.savedString")
         );
 
         this.blocks.put(path, block);
