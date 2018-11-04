@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -62,7 +61,7 @@ public class BlockInfo {
         Block block = new Block(
                 bukkitBlock.getLocation().clone(),
                 player.getUniqueId().toString(),
-                bukkitBlock.getType(),
+                bukkitBlock.getType().name(),
                 bukkitBlock.getData(),
                 bukkitBlock.toString()
         );
@@ -86,8 +85,8 @@ public class BlockInfo {
         Block block = new Block(
                 new Location(Bukkit.getWorld(world), x, y, z),
                 this.configuration.getString(path + ".uuid"),
-                Material.getMaterial(this.configuration.getString(path + ".material")),
-                (byte)this.configuration.getInt(path + ".data"),
+                this.configuration.getString(path + ".material"),
+                Byte.valueOf(this.configuration.getString(path + ".data")),
                 this.configuration.getString(path + ".savedString")
         );
 
@@ -109,8 +108,8 @@ public class BlockInfo {
         String path = path(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
         this.configuration.set(path + ".uuid", block.getUuid());
-        this.configuration.set(path + ".block.material", block.getMaterial().name());
-        this.configuration.set(path + ".block.data", block.getData());
+        this.configuration.set(path + ".block.material", block.getMaterial());
+        this.configuration.set(path + ".block.data", String.valueOf(block.getData()));
         this.configuration.set(path + ".block.savedString", block.getSavedString());
 
         try {
@@ -138,7 +137,7 @@ public class BlockInfo {
         @Getter
         private final String uuid;
         @Getter
-        private final Material material;
+        private final String material;
         @Getter
         private final byte data;
         @Getter
