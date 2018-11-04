@@ -63,6 +63,7 @@ public class BlockInfo {
                 bukkitBlock.getLocation().clone(),
                 player.getUniqueId().toString(),
                 bukkitBlock.getType(),
+                bukkitBlock.getData(),
                 bukkitBlock.toString()
         );
 
@@ -86,6 +87,7 @@ public class BlockInfo {
                 new Location(Bukkit.getWorld(world), x, y, z),
                 this.configuration.getString(path + ".uuid"),
                 Material.getMaterial(this.configuration.getString(path + ".material")),
+                (byte)this.configuration.get(path + ".data"),
                 this.configuration.getString(path + ".savedString")
         );
 
@@ -108,6 +110,7 @@ public class BlockInfo {
 
         this.configuration.set(path + ".uuid", block.getUuid());
         this.configuration.set(path + ".block.material", block.getMaterial().name());
+        this.configuration.set(path + ".block.data", block.getData());
         this.configuration.set(path + ".block.savedString", block.getSavedString());
 
         try {
@@ -137,19 +140,21 @@ public class BlockInfo {
         @Getter
         private final Material material;
         @Getter
+        private final byte data;
+        @Getter
         private final String savedString;
 
         public void show(Player player) {
             GameChest.getInstance().getDatabaseManager().getAsync().getPlayer(UUID.fromString(this.uuid), dbPlayer-> {
-//                player.sendMessage(
-//                        "§8\u00BB §e"+location.getBlockX()+", "+location.getBlockY()+", "+location.getBlockZ() +
-//                                "§8, §c"+ dbPlayer.getDatabaseElement(DatabasePlayerObject.LAST_NAME).getAsString() +
-//                                "§8, §a"+this.material
-//                );
                 player.sendMessage(
                         "§8\u00BB §c"+ dbPlayer.getDatabaseElement(DatabasePlayerObject.LAST_NAME).getAsString() +
-                                "§8: §a"+this.savedString
+                                "§8: §a"+this.material+":"+this.data+
+                                "§8 / §e"+location.getBlockX()+", "+location.getBlockY()+", "+location.getBlockZ()
                 );
+//                player.sendMessage(
+//                        "§8\u00BB §c"+ dbPlayer.getDatabaseElement(DatabasePlayerObject.LAST_NAME).getAsString() +
+//                                "§8: §a"+this.savedString
+//                );
 //                player.sendMessage("§8\u00BB §7SavedString: "+this.savedString);
             }, DatabasePlayerObject.LAST_NAME);
 
