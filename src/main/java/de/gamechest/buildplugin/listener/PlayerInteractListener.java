@@ -24,6 +24,8 @@ public class PlayerInteractListener implements Listener {
         if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             BlockInfo blockInfo = BlockInfo.getBlockInfo(player.getWorld());
             if(!blockInfo.getInfoModePlayers().contains(player.getUniqueId())) return;
+            e.setCancelled(true);
+
             BlockInfo.Block block = blockInfo.getBlock(e.getClickedBlock());
 
             if(block == null) {
