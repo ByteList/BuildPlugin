@@ -22,7 +22,7 @@ public class QuitListener implements Listener {
         Player player = e.getPlayer();
 
         buildPlugin.getPlayerManager().configurationsCache.remove(player.getUniqueId());
-        BuildPlugin.getInstance().getPermissionManager().setPlotPermissions(player, false);
+        buildPlugin.getPermissionManager().setPlotPermissions(player, false);
 
         e.setQuitMessage("§8\u00BB "+gameChest.getDisplayname(player)+"§7 hat den Server verlassen.");
 

@@ -43,8 +43,9 @@ public class BuildPlugin extends JavaPlugin {
                 new QuitListener(),
                 new AsyncPlayerChatListener(),
                 new ServerPingListener(),
-                new BlockListener(),
-                new PlayerInteractListener()
+//                new BlockListener(),
+//                new PlayerInteractListener()
+                new BlockInfo.Listener()
         };
 
         for(Listener listener : listeners) {

@@ -32,16 +32,7 @@ public class BlockInfoCommand implements CommandExecutor {
             return true;
         }
 
-        BlockInfo blockInfo = BlockInfo.getBlockInfo(player.getWorld());
-
-        if(blockInfo.getInfoModePlayers().contains(player.getUniqueId())) {
-            blockInfo.getInfoModePlayers().remove(player.getUniqueId());
-            player.sendMessage(buildPlugin.prefix+"§7BlockInfoMode: §cDisabled");
-        } else {
-            blockInfo.getInfoModePlayers().add(player.getUniqueId());
-            player.sendMessage(buildPlugin.prefix+"§7BlockInfoMode: §aEnabled");
-        }
-
+        BlockInfo.setInfoMode(player, !BlockInfo.isInfoModeSet(player.getUniqueId()));
         return true;
     }
 }

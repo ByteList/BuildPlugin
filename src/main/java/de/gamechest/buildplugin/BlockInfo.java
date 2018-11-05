@@ -6,9 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,9 +31,11 @@ import java.util.*;
  */
 public class BlockInfo {
 
-    private final BuildPlugin buildPlugin = BuildPlugin.getInstance();
-    private static final HashMap<String, BlockInfo> cache = new HashMap<>();
+    private static final BuildPlugin buildPlugin = BuildPlugin.getInstance();
     private static final String VERSION = "1.0";
+
+    private static final HashMap<String, BlockInfo> cache = new HashMap<>();
+    private static final HashMap<UUID, PlayerInventory> infoModePlayers = new HashMap<>();
 
     private final File file;
     private final YamlConfiguration configuration;
@@ -33,8 +45,6 @@ public class BlockInfo {
     private final String world;
 
     private final HashMap<String, Block> blocks = new HashMap<>();
-    @Getter
-    private final ArrayList<UUID> infoModePlayers = new ArrayList<>();
 
     private BlockInfo(String world) {
         this.file = new File(buildPlugin.getDataFolder(), "blockinfo-" + world.replace(" ", "_") + ".yml");
@@ -122,12 +132,53 @@ public class BlockInfo {
         return false;
     }
 
+    public static void setInfoMode(Player player, boolean enabled) {
+        if(enabled) {
+            if(isInfoModeSet(player.getUniqueId())) return;
+
+            infoModePlayers.put(player.getUniqueId(), player.getInventory());
+            player.getInventory().clear();
+
+            ItemStack itemStack = new ItemStack(Material.BEDROCK);
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            itemMeta.setDisplayName("§eBlockInfo");
+            itemMeta.setLore(Arrays.asList(" ",
+                    "§7Rechtsklick: §eZeigt letzte BlockInfo an platzierter Stelle an", "",
+                    "§7Linksklick: §eZeigt BlockInfo des geklickten Blocks an"));
+            itemStack.setItemMeta(itemMeta);
+            player.getInventory().setItem(0, itemStack);
+            player.getInventory().setHeldItemSlot(0);
+
+            player.sendMessage(buildPlugin.prefix+"§7BlockInfoMode: §aEnabled");
+            return;
+        }
+        if(!isInfoModeSet(player.getUniqueId())) return;
+
+        player.getInventory().clear();
+        PlayerInventory inventory = infoModePlayers.get(player.getUniqueId());
+        player.getInventory().setArmorContents(inventory.getArmorContents());
+        player.getInventory().setContents(inventory.getContents());
+        player.getInventory().setExtraContents(inventory.getExtraContents());
+
+        infoModePlayers.remove(player.getUniqueId());
+
+        player.sendMessage(buildPlugin.prefix+"§7BlockInfoMode: §cDisabled");
+    }
+
+    public static boolean isInfoModeSet(UUID uuid) {
+        return infoModePlayers.containsKey(uuid);
+    }
+
     public static BlockInfo getBlockInfo(World world) {
         if (!cache.containsKey(world.getName())) {
             cache.put(world.getName(), new BlockInfo(world.getName()));
         }
 
         return cache.get(world.getName());
+    }
+
+    public static Collection<BlockInfo> getCachedBlockInfos() {
+        return Collections.unmodifiableCollection(cache.values());
     }
 
     @AllArgsConstructor
@@ -157,6 +208,60 @@ public class BlockInfo {
 //                player.sendMessage("§8\u00BB §7SavedString: "+this.savedString);
             }, DatabasePlayerObject.LAST_NAME);
 
+        }
+    }
+
+    public static class Listener implements org.bukkit.event.Listener {
+
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onInteract(PlayerInteractEvent e) {
+            Player player = e.getPlayer();
+
+            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && !e.isCancelled()) {
+                e.setCancelled(true);
+
+                if(e.getAction() == Action.LEFT_CLICK_BLOCK) {
+                    BlockInfo.Block block = BlockInfo.getBlockInfo(player.getWorld()).getBlock(e.getClickedBlock());
+
+                    if(block == null) {
+                        player.sendMessage(buildPlugin.prefix+"§cKeine Informationen vorhanden!");
+                        return;
+                    }
+                    block.show(player);
+                }
+            }
+        }
+
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onQuit(PlayerQuitEvent e) {
+            Player player = e.getPlayer();
+
+            if(BlockInfo.isInfoModeSet(player.getUniqueId())) BlockInfo.setInfoMode(player, false);
+        }
+
+        @EventHandler(priority = EventPriority.HIGHEST)
+        public void onBlockPlace(BlockPlaceEvent e) {
+            Player player = e.getPlayer();
+            BlockInfo blockInfo = BlockInfo.getBlockInfo(player.getWorld());
+
+            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && player.getInventory().getItemInMainHand() != null &&
+                    player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§eBlockInfo")) {
+                e.setCancelled(true);
+
+                BlockInfo.Block block = blockInfo.getBlock(e.getBlock());
+
+                if(block == null) {
+                    player.sendMessage(buildPlugin.prefix+"§cKeine Informationen vorhanden!");
+                    return;
+                }
+
+                block.show(player);
+                return;
+            }
+
+            if(!e.isCancelled()) {
+                blockInfo.addBlock(player, e.getBlock());
+            }
         }
     }
 }
