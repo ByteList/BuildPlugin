@@ -14,7 +14,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -217,7 +220,9 @@ public class BlockInfo {
         public void onInteract(PlayerInteractEvent e) {
             Player player = e.getPlayer();
 
-            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && !e.isCancelled() && e.getAction() == Action.LEFT_CLICK_BLOCK) {
+            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && !e.isCancelled() && e.getAction() == Action.LEFT_CLICK_BLOCK &&
+                    player.getInventory().getItemInMainHand() != null &&
+                    player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§eBlockInfo")) {
                 e.setCancelled(true);
 
                 BlockInfo.Block block = BlockInfo.getBlockInfo(player.getWorld()).getBlock(e.getClickedBlock());
@@ -260,6 +265,19 @@ public class BlockInfo {
             if(!e.isCancelled()) {
                 blockInfo.addBlock(player, e.getBlock());
             }
+        }
+
+        @EventHandler(priority = EventPriority.LOWEST)
+        public void onInventoryClick(InventoryClickEvent e) {
+            if(BlockInfo.isInfoModeSet(e.getWhoClicked().getUniqueId())) e.setCancelled(true);
+        }
+        @EventHandler(priority = EventPriority.LOWEST)
+        public void onDrop(PlayerDropItemEvent e) {
+            if(BlockInfo.isInfoModeSet(e.getPlayer().getUniqueId())) e.setCancelled(true);
+        }
+        @EventHandler(priority = EventPriority.LOWEST)
+        public void onPickup(PlayerPickupItemEvent e) {
+            if(BlockInfo.isInfoModeSet(e.getPlayer().getUniqueId())) e.setCancelled(true);
         }
     }
 }
