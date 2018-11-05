@@ -217,18 +217,16 @@ public class BlockInfo {
         public void onInteract(PlayerInteractEvent e) {
             Player player = e.getPlayer();
 
-            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && !e.isCancelled()) {
+            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && !e.isCancelled() && e.getAction() == Action.LEFT_CLICK_BLOCK) {
                 e.setCancelled(true);
 
-                if(e.getAction() == Action.LEFT_CLICK_BLOCK) {
-                    BlockInfo.Block block = BlockInfo.getBlockInfo(player.getWorld()).getBlock(e.getClickedBlock());
+                BlockInfo.Block block = BlockInfo.getBlockInfo(player.getWorld()).getBlock(e.getClickedBlock());
 
-                    if(block == null) {
-                        player.sendMessage(buildPlugin.prefix+"§cKeine Informationen vorhanden!");
-                        return;
-                    }
-                    block.show(player);
+                if(block == null) {
+                    player.sendMessage(buildPlugin.prefix+"§cKeine Informationen vorhanden!");
+                    return;
                 }
+                block.show(player);
             }
         }
 
@@ -244,7 +242,7 @@ public class BlockInfo {
             Player player = e.getPlayer();
             BlockInfo blockInfo = BlockInfo.getBlockInfo(player.getWorld());
 
-            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && player.getInventory().getItemInMainHand() != null &&
+            if(BlockInfo.isInfoModeSet(player.getUniqueId()) && !e.isCancelled() && player.getInventory().getItemInMainHand() != null &&
                     player.getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§eBlockInfo")) {
                 e.setCancelled(true);
 
