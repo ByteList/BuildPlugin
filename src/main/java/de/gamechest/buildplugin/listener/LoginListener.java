@@ -35,7 +35,6 @@ public class LoginListener implements Listener {
             return;
         }
 
-        dbPlayer.createPlayer();
         dbPlayer.updatePlayer();
         DatabaseUuidBuffer databaseUuidBuffer = databaseManager.getDatabaseUuidBuffer();
         String lastName = null;
