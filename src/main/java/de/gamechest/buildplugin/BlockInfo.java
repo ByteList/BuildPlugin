@@ -20,7 +20,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.io.File;
@@ -38,7 +37,7 @@ public class BlockInfo {
     private static final String VERSION = "1.0";
 
     private static final HashMap<String, BlockInfo> cache = new HashMap<>();
-    private static final HashMap<UUID, PlayerInventory> infoModePlayers = new HashMap<>();
+    private static final HashMap<UUID, ArrayList<ItemStack[]>> infoModePlayers = new HashMap<>();
 
     private final File file;
     private final YamlConfiguration configuration;
@@ -139,7 +138,11 @@ public class BlockInfo {
         if(enabled) {
             if(isInfoModeSet(player.getUniqueId())) return;
 
-            infoModePlayers.put(player.getUniqueId(), player.getInventory());
+            ArrayList<ItemStack[]> list = new ArrayList<>();
+            list.add(player.getInventory().getArmorContents());
+            list.add(player.getInventory().getContents());
+            infoModePlayers.put(player.getUniqueId(), list);
+
             player.getInventory().clear();
 
             ItemStack itemStack = new ItemStack(Material.BEDROCK);
@@ -158,10 +161,10 @@ public class BlockInfo {
         if(!isInfoModeSet(player.getUniqueId())) return;
 
         player.getInventory().clear();
-        PlayerInventory inventory = infoModePlayers.get(player.getUniqueId());
-        player.getInventory().setArmorContents(inventory.getArmorContents());
-        player.getInventory().setContents(inventory.getContents());
-        player.getInventory().setExtraContents(inventory.getExtraContents());
+
+        ArrayList<ItemStack[]> list = infoModePlayers.get(player.getUniqueId());
+        player.getInventory().setArmorContents(list.get(0));
+        player.getInventory().setContents(list.get(1));
 
         infoModePlayers.remove(player.getUniqueId());
 
