@@ -155,6 +155,7 @@ public class ShulkerDefenceMode implements IMode {
 
     @Override
     public void onInteract(PlayerInteractEvent e) {
+        e.setCancelled(true);
         switch (e.getItem().getItemMeta().getDisplayName()) {
             case "§6Set Spawn":
                 switch (e.getAction()) {
