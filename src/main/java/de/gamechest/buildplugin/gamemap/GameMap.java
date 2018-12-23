@@ -189,12 +189,12 @@ public class GameMap implements Listener {
 
         if(this.player.getName().equals(player.getName())) {
             if(e.getClickedInventory() != null && e.getCurrentItem() != null) {
-                e.setCancelled(true);
                 Inventory inventory = e.getClickedInventory();
                 ItemStack item = e.getCurrentItem();
 
                 switch (inventory.getName()) {
                     case SETTINGS_INVENTORY_NAME:
+                        e.setCancelled(true);
                         switch (item.getItemMeta().getDisplayName()) {
                             case "§6Set Name":
                                 player.closeInventory();
