@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -155,9 +156,9 @@ public class ShulkerDefenceMode implements IMode {
 
     @Override
     public void onInteract(PlayerInteractEvent e) {
-        e.setCancelled(true);
         switch (e.getItem().getItemMeta().getDisplayName()) {
             case "§6Set Spawn":
+                e.setCancelled(true);
                 switch (e.getAction()) {
                     case RIGHT_CLICK_AIR:
                         this.redTeamSpawnLocation = e.getPlayer().getLocation();
@@ -173,29 +174,29 @@ public class ShulkerDefenceMode implements IMode {
                 }
                 break;
             case "§6Set Shop":
-                switch (e.getAction()) {
-                    case RIGHT_CLICK_BLOCK:
-                        this.redTeamShopLocation = e.getPlayer().getLocation();
-                        spawnShopFakePlayer(e.getPlayer(), true);
-                        break;
-                    case LEFT_CLICK_BLOCK:
-                        this.blueTeamShopLocation = e.getPlayer().getLocation();
-                        spawnShopFakePlayer(e.getPlayer(), false);
-                        break;
-                    default:
-                        e.getPlayer().sendMessage("§8\u00BB §cUngültige Aktion!");
-                        break;
-                }
+                e.setCancelled(true);
+                if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    this.redTeamShopLocation = e.getPlayer().getLocation();
+                    spawnShopFakePlayer(e.getPlayer(), true);
+                } else
+                if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+                    this.blueTeamShopLocation = e.getPlayer().getLocation();
+                    spawnShopFakePlayer(e.getPlayer(), false);
+                } else
+                    e.getPlayer().sendMessage("§8\u00BB §cUngültige Aktion!");
                 break;
             case "§6Set Bronze-Drop":
+                e.setCancelled(true);
                 this.bronzeSpawnLocations.add(e.getPlayer().getLocation());
                 e.getPlayer().sendMessage("§8\u00BB §7Location hinzugefügt: §eBronze");
                 break;
             case "§6Set Silver-Drop":
+                e.setCancelled(true);
                 this.silverSpawnLocations.add(e.getPlayer().getLocation());
                 e.getPlayer().sendMessage("§8\u00BB §7Location hinzugefügt: §eSilver");
                 break;
             case "§6Set Gold-Drop":
+                e.setCancelled(true);
                 this.goldSpawnLocations.add(e.getPlayer().getLocation());
                 e.getPlayer().sendMessage("§8\u00BB §7Location hinzugefügt: §eGold");
                 break;
