@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by ByteList on 22.12.2018.
@@ -53,6 +54,8 @@ public class GameMap implements Listener {
     private IMode mode;
     @Getter @Setter
     private String name;
+    @Getter
+    private ArrayList<Integer> tasks = new ArrayList<>();
 
     private ItemStack[] armorContents, contents;
     private ItemStack iconItemStack;
@@ -75,7 +78,7 @@ public class GameMap implements Listener {
 
         switch (gameMode) {
             case SHULKER_DEFENCE:
-                this.mode = new ShulkerDefenceMode();
+                this.mode = new ShulkerDefenceMode(this);
                 break;
             case DEATH_RUN:
                 this.mode = new DeathRunMode();
@@ -143,7 +146,7 @@ public class GameMap implements Listener {
         set("displayname", this.name).set("game", this.gameMode.getMode());
         set("item.material", iconItemStack.getType().name()).set("item.data", ""+iconItemStack.getData().getData());
         saveConfig();
-        HandlerList.unregisterAll(this);
+        disable();
 
         Bukkit.unloadWorld(this.world, true);
 
@@ -161,6 +164,11 @@ public class GameMap implements Listener {
         player.getInventory().clear();
         player.getInventory().setArmorContents(this.armorContents);
         player.getInventory().setContents(this.contents);
+    }
+
+    public void disable() {
+        HandlerList.unregisterAll(this);
+        this.tasks.forEach(integer -> Bukkit.getScheduler().cancelTask(integer));
     }
 
     @EventHandler

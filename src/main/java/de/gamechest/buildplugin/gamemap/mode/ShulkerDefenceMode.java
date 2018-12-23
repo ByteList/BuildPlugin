@@ -2,6 +2,7 @@ package de.gamechest.buildplugin.gamemap.mode;
 
 import de.gamechest.ItemBuilder;
 import de.gamechest.buildplugin.BuildPlugin;
+import de.gamechest.buildplugin.gamemap.GameMap;
 import de.gamechest.buildplugin.gamemap.GameMode;
 import de.gamechest.buildplugin.gamemap.IMode;
 import de.gamechest.buildplugin.gamemap.mode.shulkerdefence.ShopFakePlayer;
@@ -43,12 +44,12 @@ public class ShulkerDefenceMode implements IMode {
     private ShopFakePlayer redTeamShopFakePlayer, blueTeamShopFakePlayer;
     private SpawnFakePlayer redTeamSpawnFakePlayer, blueTeamSpawnFakePlayer;
 
-    public ShulkerDefenceMode() {
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(buildPlugin, ()-> {
+    public ShulkerDefenceMode(GameMap gameMap) {
+        gameMap.getTasks().add(Bukkit.getScheduler().scheduleSyncRepeatingTask(buildPlugin, ()-> {
             new ArrayList<>(bronzeSpawnLocations).forEach(location -> spawnDrop("bronze", location));
             new ArrayList<>(silverSpawnLocations).forEach(location -> spawnDrop("silver", location));
             new ArrayList<>(goldSpawnLocations).forEach(location -> spawnDrop("gold", location));
-        }, 20L, 20L);
+        }, 20L, 20L));
     }
 
     private void spawnDrop(String drop, Location location) {
