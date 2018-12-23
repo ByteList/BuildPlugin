@@ -118,7 +118,7 @@ public class ShulkerDefenceMode implements IMode {
         inventory.setItem(0, ItemBuilder.newBuilder(Material.DIAMOND)
                 .displayname("§6Set Spawn").lore("§eDeine Position wird übernommen", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
         inventory.setItem(1, ItemBuilder.newBuilder(new SpawnEgg(EntityType.GUARDIAN).toItemStack())
-                .displayname("§6Set Shop").lore("§eKlicke auf die Position", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
+                .displayname("§6Set Shop").lore("§eDeine Position wird übernommen", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
 
         inventory.setItem(3, ItemBuilder.newBuilder(Material.CLAY_BRICK)
                 .displayname("§6Set Bronze-Drop").lore("§eDeine Position wird übernommen").get());
@@ -175,11 +175,11 @@ public class ShulkerDefenceMode implements IMode {
             case "§6Set Shop":
                 switch (e.getAction()) {
                     case RIGHT_CLICK_BLOCK:
-                        this.redTeamShopLocation = e.getClickedBlock().getLocation().add(0, 1, 0);
+                        this.redTeamShopLocation = e.getPlayer().getLocation();
                         spawnShopFakePlayer(e.getPlayer(), true);
                         break;
                     case LEFT_CLICK_BLOCK:
-                        this.blueTeamShopLocation = e.getClickedBlock().getLocation().add(0, 1, 0);
+                        this.blueTeamShopLocation = e.getPlayer().getLocation();
                         spawnShopFakePlayer(e.getPlayer(), false);
                         break;
                     default:
