@@ -142,6 +142,7 @@ public class GameMap implements Listener {
     }
 
     public void export() {
+        player.sendMessage("§8\u00BB §7Die Welt wird erxportiert...");
         this.mode.export(this.configuration);
         set("displayname", this.name).set("game", this.gameMode.getMode());
         set("item.material", iconItemStack.getType().name()).set("item.data", ""+iconItemStack.getData().getData());
@@ -151,10 +152,9 @@ public class GameMap implements Listener {
         Bukkit.unloadWorld(this.world, true);
 
         try {
-            String name = this.world.getWorldFolder().getName();
-            FileUtils.copyDirectory(this.world.getWorldFolder(), this.directory);
-            File world = new File(this.directory, name);
-            world.renameTo(new File(this.directory, "world/"));
+            File world = new File(this.directory, "./world/");
+            world.mkdirs();
+            FileUtils.copyDirectory(this.world.getWorldFolder(), world);
         } catch (IOException e) {
             e.printStackTrace();
         }
