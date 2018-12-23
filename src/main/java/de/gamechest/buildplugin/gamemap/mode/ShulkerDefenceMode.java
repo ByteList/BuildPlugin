@@ -175,11 +175,11 @@ public class ShulkerDefenceMode implements IMode {
             case "§6Set Shop":
                 switch (e.getAction()) {
                     case RIGHT_CLICK_BLOCK:
-                        this.redTeamShopLocation = e.getPlayer().getLocation();
+                        this.redTeamShopLocation = e.getClickedBlock().getLocation().add(0, 1, 0);
                         spawnShopFakePlayer(e.getPlayer(), true);
                         break;
                     case LEFT_CLICK_BLOCK:
-                        this.blueTeamShopLocation = e.getPlayer().getLocation();
+                        this.blueTeamShopLocation = e.getClickedBlock().getLocation().add(0, 1, 0);
                         spawnShopFakePlayer(e.getPlayer(), false);
                         break;
                     default:
