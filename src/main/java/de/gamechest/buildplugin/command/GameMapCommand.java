@@ -1,7 +1,8 @@
 package de.gamechest.buildplugin.command;
 
 import de.gamechest.buildplugin.BuildPlugin;
-import de.gamechest.buildplugin.gameworld.GameMode;
+import de.gamechest.buildplugin.gamemap.GameMap;
+import de.gamechest.buildplugin.gamemap.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -27,20 +28,24 @@ public class GameMapCommand implements CommandExecutor, TabExecutor {
         }
         Player player = (Player) sender;
 
+        if(args.length == 2) {
+            String mode = args[0];
+            GameMode gameMode = GameMode.getGameMode(mode);
+            if(gameMode == null) {
+                sender.sendMessage("§8\u00BB Unbekannter Gamemode!");
+                return true;
+            }
+            buildPlugin.getPlayerManager().setGameMap(player, new GameMap(player, player.getWorld(), gameMode, args[1]));
+        }
 
-
-        sender.sendMessage(buildPlugin.prefix+"§eAlle /gamemap Befehle:");
-        sender.sendMessage("§8\u00BB §c/gamemap init <gamemode>");
-        sender.sendMessage("§8\u00BB §c/gamemap save <name>");
+        sender.sendMessage("§8\u00BB §c/gamemap <gamemode> <name>");
         return true;
     }
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        if(args.length >= 1 && args.length < 3) {
-            if(args[1].equalsIgnoreCase("init")) {
-                return GameMode.getModes();
-            }
+        if(args.length >= 1 && args.length < 2) {
+            return GameMode.getModes();
         }
         return null;
     }

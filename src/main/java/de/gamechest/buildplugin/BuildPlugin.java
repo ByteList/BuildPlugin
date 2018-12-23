@@ -11,6 +11,7 @@ import org.bson.Document;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
@@ -31,11 +32,16 @@ public class BuildPlugin extends JavaPlugin {
     @Getter
     private PermissionManager permissionManager;
 
+    @Getter
+    private File gameMapRootDirectory;
+
     @Override
     public void onEnable() {
         instance = this;
         this.playerManager = new PlayerManager();
         this.permissionManager = new PermissionManager();
+
+        this.gameMapRootDirectory = new File(this.getDataFolder(), "GameMaps/");
 
         Listener[] listeners = {
                 new JoinListener(),
@@ -64,6 +70,7 @@ public class BuildPlugin extends JavaPlugin {
         getCommand("buildmode").setExecutor(new BuildModeCommand());
         getCommand("loadschematic").setExecutor(new LoadSchematicCommand());
         getCommand("blockinfo").setExecutor(new BlockInfoCommand());
+        getCommand("gamemap").setExecutor(new BlockInfoCommand());
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, new CheckGamemodeTask(), 10L, 10L);
 

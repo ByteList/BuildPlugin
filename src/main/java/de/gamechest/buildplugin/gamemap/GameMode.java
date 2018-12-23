@@ -1,4 +1,4 @@
-package de.gamechest.buildplugin.gameworld;
+package de.gamechest.buildplugin.gamemap;
 
 import lombok.Getter;
 

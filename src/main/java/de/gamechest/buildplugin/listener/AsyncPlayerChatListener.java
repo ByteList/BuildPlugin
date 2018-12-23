@@ -4,6 +4,7 @@ import de.gamechest.GameChest;
 import de.gamechest.buildplugin.BuildPlugin;
 import de.gamechest.buildplugin.BuildMode;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,17 +23,25 @@ public class AsyncPlayerChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
 
         e.setCancelled(true);
 
-        BuildMode buildMode = buildPlugin.getBuildMode(p.getUniqueId());
-        String msg = e.getMessage();
-        String displayname = gameChest.getDisplayname(p);
-        String prefix = buildMode.getColor()+buildMode.getName();
-        String world = "§f[§e"+p.getWorld().getName()+"§f]";
+        if(buildPlugin.getPlayerManager().getWaitingForGameMapChangeName().contains(player.getUniqueId())) {
+            buildPlugin.getPlayerManager().getWaitingForGameMapChangeName().remove(player.getUniqueId());
+            buildPlugin.getPlayerManager().getGameMap(player.getUniqueId()).setName(e.getMessage());
+            player.sendMessage("§8\u00BB §aName erfolgreich geändert: §e"+e.getMessage());
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 2F, 2F);
+            return;
+        }
 
-        System.out.println(p.getName()+": "+msg);
+        BuildMode buildMode = buildPlugin.getBuildMode(player.getUniqueId());
+        String msg = e.getMessage();
+        String displayname = gameChest.getDisplayname(player);
+        String prefix = buildMode.getColor()+buildMode.getName();
+        String world = "§f[§e"+player.getWorld().getName()+"§f]";
+
+        System.out.println(player.getName()+": "+msg);
         for (Player all : Bukkit.getOnlinePlayers()) {
             all.sendMessage(world+" "+prefix+"§8 \u00BB "+displayname+"§7: §r"+msg);
         }
