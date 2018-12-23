@@ -169,6 +169,7 @@ public class GameMap implements Listener {
     public void disable() {
         HandlerList.unregisterAll(this);
         this.tasks.forEach(integer -> Bukkit.getScheduler().cancelTask(integer));
+        buildPlugin.getPlayerManager().removeGameMap(player.getUniqueId());
     }
 
     @EventHandler

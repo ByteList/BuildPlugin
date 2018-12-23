@@ -27,11 +27,11 @@ public class GameMapCommand implements CommandExecutor {
 
         if(args.length == 1) {
             if(args[0].equalsIgnoreCase("disable")) {
-                GameMap gameMap = buildPlugin.getPlayerManager().getGameMap(player.getUniqueId());
-                if(gameMap == null) {
+                if(!buildPlugin.getPlayerManager().hasGameMap(player.getUniqueId())) {
                     sender.sendMessage("§8\u00BB §cGamemap is already disabled!");
                     return true;
                 }
+                GameMap gameMap = buildPlugin.getPlayerManager().getGameMap(player.getUniqueId());
                 gameMap.disable();
                 sender.sendMessage("§8\u00BB §eGamemap disabled!");
                 return true;
@@ -45,8 +45,7 @@ public class GameMapCommand implements CommandExecutor {
                 sender.sendMessage("§8\u00BB Unbekannter Gamemode!");
                 return true;
             }
-            GameMap gameMap = buildPlugin.getPlayerManager().getGameMap(player.getUniqueId());
-            if(gameMap != null) {
+            if(buildPlugin.getPlayerManager().hasGameMap(player.getUniqueId())) {
                 sender.sendMessage("§8\u00BB §cGamemap is already enabled!");
                 return true;
             }
