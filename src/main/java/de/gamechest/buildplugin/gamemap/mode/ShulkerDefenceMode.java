@@ -71,7 +71,7 @@ public class ShulkerDefenceMode implements IMode {
 
     private void spawnSpawnFakePlayer(Player player, boolean redTeam) {
         if(redTeam) {
-            if(this.redTeamSpawnLocation != null) {
+            if(this.redTeamSpawnFakePlayer != null) {
                 this.redTeamSpawnFakePlayer.remove(player);
             }
             if(this.redTeamSpawnLocation != null) {
