@@ -160,6 +160,19 @@ public class ShulkerDefenceMode implements IMode {
         }
     }
 
+    private void removeSpawnFakePlayer(Player player, boolean redTeam) {
+        if(redTeam) {
+            if(this.redTeamSpawnFakePlayer != null) {
+                this.redTeamSpawnFakePlayer.remove(player);
+            }
+            return;
+        }
+
+        if(this.blueTeamSpawnFakePlayer != null) {
+            this.blueTeamSpawnFakePlayer.remove(player);
+        }
+    }
+
     private void spawnShopFakePlayer(Player player, boolean redTeam) {
         if(redTeam) {
             if(this.redTeamShopFakePlayer != null) {
@@ -181,6 +194,19 @@ public class ShulkerDefenceMode implements IMode {
         }
     }
 
+    private void removeShopFakePlayer(Player player, boolean redTeam) {
+        if(redTeam) {
+            if(this.redTeamShopFakePlayer != null) {
+                this.redTeamShopFakePlayer.remove(player);
+            }
+            return;
+        }
+
+        if(this.blueTeamShopFakePlayer != null) {
+            this.blueTeamShopFakePlayer.remove(player);
+        }
+    }
+
     @Override
     public void loadInventory(Player player) {
         PlayerInventory inventory = player.getInventory();
@@ -190,7 +216,7 @@ public class ShulkerDefenceMode implements IMode {
         inventory.setItem(1, ItemBuilder.newBuilder(new SpawnEgg(EntityType.GUARDIAN).toItemStack())
                 .displayname("§6Set Shop").lore("§eDeine Position wird übernommen", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
         inventory.setItem(2, ItemBuilder.newBuilder(Material.BED)
-                .displayname("§6Set Shulker").lore("§eDeine Position wird übernommen").get());
+                .displayname("§6Set Shulker").lore("§eDeine Position wird übernommen", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
         inventory.setItem(4, ItemBuilder.newBuilder(Material.CLAY_BRICK)
                 .displayname("§6Set Bronze-Drop").lore("§eDeine Position wird übernommen").get());
         inventory.setItem(5, ItemBuilder.newBuilder(Material.IRON_INGOT)
@@ -238,13 +264,6 @@ public class ShulkerDefenceMode implements IMode {
             return false;
         }
 
-        removeShulker(true);
-        removeShulker(false);
-        this.redTeamShopFakePlayer.remove(player);
-        this.blueTeamShopFakePlayer.remove(player);
-        this.redTeamSpawnFakePlayer.remove(player);
-        this.blueTeamSpawnFakePlayer.remove(player);
-
         configuration.set("team.red.spawn", this.redTeamSpawnLocation.getX()+";"+this.redTeamSpawnLocation.getY()+";"+
                 this.redTeamSpawnLocation.getZ()+";"+this.redTeamSpawnLocation.getYaw()+";"+this.redTeamSpawnLocation.getPitch());
         configuration.set("team.blue.spawn", this.blueTeamSpawnLocation.getX()+";"+this.blueTeamSpawnLocation.getY()+";"+
@@ -272,6 +291,16 @@ public class ShulkerDefenceMode implements IMode {
         configuration.set("drop.silver.delay", 8);
         configuration.set("drop.gold.delay", 20);
         return true;
+    }
+
+    @Override
+    public void disable(Player player) {
+        removeShulker(true);
+        removeShulker(false);
+        removeSpawnFakePlayer(player, true);
+        removeSpawnFakePlayer(player, false);
+        removeShopFakePlayer(player, true);
+        removeShopFakePlayer(player, false);
     }
 
     @Override

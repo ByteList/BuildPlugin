@@ -148,8 +148,8 @@ public class GameMap implements Listener {
     }
 
     public void export() {
-        player.closeInventory();
-        player.sendMessage("§8\u00BB §7Die Welt wird exportiert...");
+        this.player.closeInventory();
+        this.player.sendMessage("§8\u00BB §7Die Welt wird exportiert...");
         if(!this.mode.export(this.player, this.configuration)) {
             return;
         }
@@ -169,17 +169,19 @@ public class GameMap implements Listener {
             e.printStackTrace();
         }
 
-        player.sendMessage("§8\u00BB §aDie Welt wurde erfolgreich exportiert: §e"+this.name);
+        this.player.sendMessage("§8\u00BB §aDie Welt wurde erfolgreich exportiert: §e"+this.name);
     }
 
     public void disable() {
         HandlerList.unregisterAll(this);
         this.tasks.forEach(integer -> Bukkit.getScheduler().cancelTask(integer));
-        buildPlugin.getPlayerManager().removeGameMap(player.getUniqueId());
+        buildPlugin.getPlayerManager().removeGameMap(this.player.getUniqueId());
 
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(this.armorContents);
-        player.getInventory().setContents(this.contents);
+        this.player.getInventory().clear();
+        this.player.getInventory().setArmorContents(this.armorContents);
+        this.player.getInventory().setContents(this.contents);
+
+        this.mode.disable(this.player);
     }
 
     @EventHandler

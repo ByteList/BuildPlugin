@@ -31,6 +31,11 @@ public class DeathRunMode implements IMode {
     }
 
     @Override
+    public void disable(Player player) {
+
+    }
+
+    @Override
     public void onInteract(PlayerInteractEvent e) {
 
     }

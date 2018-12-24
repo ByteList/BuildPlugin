@@ -20,6 +20,8 @@ public interface IMode {
 
     public boolean export(Player player, YamlConfiguration configuration);
 
+    public void disable(Player player);
+
     public void onInteract(PlayerInteractEvent e);
 
     public void onInventoryClick(InventoryClickEvent e);
