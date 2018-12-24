@@ -156,6 +156,9 @@ public class GameMap implements Listener {
 
         try {
             File world = new File(this.directory, "./world/");
+            if(world.exists()) {
+                world.delete();
+            }
             world.mkdirs();
             FileUtils.copyDirectory(this.world.getWorldFolder(), world);
         } catch (IOException e) {
