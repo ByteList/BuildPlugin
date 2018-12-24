@@ -25,8 +25,8 @@ public class ClickAttackMode implements IMode {
     }
 
     @Override
-    public void export(YamlConfiguration configuration) {
-
+    public boolean export(Player player, YamlConfiguration configuration) {
+        return false;
     }
 
     @Override
