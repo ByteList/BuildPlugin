@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.block.Action;
@@ -139,23 +140,29 @@ public class ShulkerDefenceMode implements IMode {
 
         if(redTeam) {
             if(this.redTeamSpawnLocation != null) {
-                Zombie zombie = (Zombie) gameMap.getWorld().spawnEntity(this.redTeamSpawnLocation, EntityType.ZOMBIE);
-                zombie.setAI(false);
-                zombie.setCustomName("§cSpawn");
-                zombie.setCustomNameVisible(true);
-                zombie.setCollidable(false);
-                this.redTeamSpawnZombie = zombie;
+                Zombie entity = (Zombie) gameMap.getWorld().spawnEntity(this.redTeamSpawnLocation, EntityType.ZOMBIE);
+                entity.setAI(false);
+                entity.setCustomName("§cSpawn");
+                entity.setCustomNameVisible(true);
+                entity.setCollidable(false);
+                entity.setInvulnerable(true);
+                entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0);
+                entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(1);
+                this.redTeamSpawnZombie = entity;
             }
             return;
         }
 
         if(this.blueTeamSpawnLocation != null) {
-            Zombie zombie = (Zombie) gameMap.getWorld().spawnEntity(this.blueTeamSpawnLocation, EntityType.ZOMBIE);
-            zombie.setAI(false);
-            zombie.setCustomName("§bSpawn");
-            zombie.setCustomNameVisible(true);
-            zombie.setCollidable(false);
-            this.blueTeamSpawnZombie = zombie;
+            Zombie entity = (Zombie) gameMap.getWorld().spawnEntity(this.blueTeamSpawnLocation, EntityType.ZOMBIE);
+            entity.setAI(false);
+            entity.setCustomName("§bSpawn");
+            entity.setCustomNameVisible(true);
+            entity.setCollidable(false);
+            entity.setInvulnerable(true);
+            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0);
+            entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(1);
+            this.blueTeamSpawnZombie = entity;
         }
     }
 
@@ -177,23 +184,29 @@ public class ShulkerDefenceMode implements IMode {
 
         if(redTeam) {
             if(this.redTeamShopLocation != null) {
-                Villager villager = (Villager) gameMap.getWorld().spawnEntity(this.redTeamShopLocation, EntityType.VILLAGER);
-                villager.setAI(false);
-                villager.setCustomName("§cDealer");
-                villager.setCustomNameVisible(true);
-                villager.setCollidable(false);
-                this.redTeamShopVillager = villager;
+                Villager entity = (Villager) gameMap.getWorld().spawnEntity(this.redTeamShopLocation, EntityType.VILLAGER);
+                entity.setAI(false);
+                entity.setCustomName("§cDealer");
+                entity.setCustomNameVisible(true);
+                entity.setCollidable(false);
+                entity.setInvulnerable(true);
+                entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0);
+                entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(1);
+                this.redTeamShopVillager = entity;
             }
             return;
         }
 
         if(this.blueTeamShopLocation != null) {
-            Villager villager = (Villager) gameMap.getWorld().spawnEntity(this.blueTeamShopLocation, EntityType.VILLAGER);
-            villager.setAI(false);
-            villager.setCustomName("§bDealer");
-            villager.setCustomNameVisible(true);
-            villager.setCollidable(false);
-            this.blueTeamShopVillager = villager;
+            Villager entity = (Villager) gameMap.getWorld().spawnEntity(this.blueTeamShopLocation, EntityType.VILLAGER);
+            entity.setAI(false);
+            entity.setCustomName("§bDealer");
+            entity.setCustomNameVisible(true);
+            entity.setCollidable(false);
+            entity.setInvulnerable(true);
+            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0);
+            entity.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(1);
+            this.blueTeamShopVillager = entity;
         }
     }
 
