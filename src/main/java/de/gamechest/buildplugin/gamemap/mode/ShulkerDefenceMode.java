@@ -260,9 +260,9 @@ public class ShulkerDefenceMode implements IMode {
         configuration.set("team.blue.shop", this.blueTeamShopLocation.getX()+";"+this.blueTeamShopLocation.getY()+";"+
                 this.blueTeamShopLocation.getZ()+";0;0");
         ArrayList<String> bronze = new ArrayList<>(), silver = new ArrayList<>(), gold = new ArrayList<>();
-        this.bronzeSpawnLocations.forEach(location -> bronze.add(location.getX()+";"+location.getY()+";"+location.getZ()));
-        this.silverSpawnLocations.forEach(location -> silver.add(location.getX()+";"+location.getY()+";"+location.getZ()));
-        this.goldSpawnLocations.forEach(location -> gold.add(location.getX()+";"+location.getY()+";"+location.getZ()));
+        this.bronzeSpawnLocations.forEach(location -> bronze.add(location.getX()+";"+location.getY()+";"+location.getZ()+";0;0"));
+        this.silverSpawnLocations.forEach(location -> silver.add(location.getX()+";"+location.getY()+";"+location.getZ()+";0;0"));
+        this.goldSpawnLocations.forEach(location -> gold.add(location.getX()+";"+location.getY()+";"+location.getZ()+";0;0"));
 
         configuration.set("drop.bronze.locations", bronze);
         configuration.set("drop.silver.locations", silver);
