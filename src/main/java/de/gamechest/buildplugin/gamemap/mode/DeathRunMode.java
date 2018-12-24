@@ -31,7 +31,7 @@ public class DeathRunMode implements IMode {
     }
 
     @Override
-    public void disable() {
+    public void disable(Player player) {
 
     }
 

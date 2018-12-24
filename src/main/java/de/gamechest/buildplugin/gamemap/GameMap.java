@@ -181,7 +181,7 @@ public class GameMap implements Listener {
         this.player.getInventory().setArmorContents(this.armorContents);
         this.player.getInventory().setContents(this.contents);
 
-        this.mode.disable();
+        this.mode.disable(this.player);
     }
 
     @EventHandler
