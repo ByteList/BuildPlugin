@@ -226,14 +226,14 @@ public class ShulkerDefenceMode implements IMode {
                 this.blueTeamSpawnLocation.getZ()+";"+this.blueTeamSpawnLocation.getYaw()+";"+this.blueTeamSpawnLocation.getPitch());
 
         configuration.set("team.red.shulker", this.redTeamShulkerLocation.getX()+";"+this.redTeamShulkerLocation.getY()+";"+
-                this.redTeamShulkerLocation.getZ());
+                this.redTeamShulkerLocation.getZ()+";0;0");
         configuration.set("team.blue.shulker", this.blueTeamShulkerLocation.getX()+";"+this.blueTeamShulkerLocation.getY()+";"+
-                this.blueTeamShulkerLocation.getZ());
+                this.blueTeamShulkerLocation.getZ()+";0;0");
 
         configuration.set("team.red.shop", this.redTeamShopLocation.getX()+";"+this.redTeamShopLocation.getY()+";"+
-                this.redTeamShopLocation.getZ());
+                this.redTeamShopLocation.getZ()+";0;0");
         configuration.set("team.blue.shop", this.blueTeamShopLocation.getX()+";"+this.blueTeamShopLocation.getY()+";"+
-                this.blueTeamShopLocation.getZ());
+                this.blueTeamShopLocation.getZ()+";0;0");
         ArrayList<String> bronze = new ArrayList<>(), silver = new ArrayList<>(), gold = new ArrayList<>();
         this.bronzeSpawnLocations.forEach(location -> bronze.add(location.getX()+";"+location.getY()+";"+location.getZ()));
         this.silverSpawnLocations.forEach(location -> silver.add(location.getX()+";"+location.getY()+";"+location.getZ()));
