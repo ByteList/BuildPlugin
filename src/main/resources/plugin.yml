@@ -9,10 +9,10 @@ loadbefore: [WorldEdit]
 commands:
    gamemode:
       aliases: [gm]
+   gamemap:
    speed:
    buildmode:
    buildconnect:
    loadschematic:
      aliases: [loadsch]
    blockinfo:
-   gamemap:

@@ -65,12 +65,12 @@ public class BuildPlugin extends JavaPlugin {
 //        getCommand("kill").setExecutor(new DisabledCommand());
 
         getCommand("gamemode").setExecutor(new GamemodeCommand());
+        getCommand("gamemap").setExecutor(new GameMapCommand());
         getCommand("speed").setExecutor(new SpeedCommand());
         getCommand("buildconnect").setExecutor(new BuildConnectCommand());
         getCommand("buildmode").setExecutor(new BuildModeCommand());
         getCommand("loadschematic").setExecutor(new LoadSchematicCommand());
         getCommand("blockinfo").setExecutor(new BlockInfoCommand());
-        getCommand("gamemap").setExecutor(new GameMapCommand());
 
         getServer().getScheduler().runTaskTimerAsynchronously(this, new CheckGamemodeTask(), 10L, 10L);
 
