@@ -20,7 +20,7 @@ public class PlayerManager {
 
     @Getter
     private ArrayList<UUID> waitingForGameMapChangeName = new ArrayList<>();
-
+    @Getter
     private HashMap<UUID, GameMap> gameMaps = new HashMap<>();
 
     public void setGameMap(Player player, GameMap gameMap) {

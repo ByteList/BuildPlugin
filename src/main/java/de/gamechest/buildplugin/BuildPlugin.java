@@ -79,6 +79,7 @@ public class BuildPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.playerManager.getGameMaps().forEach((uuid, gameMap) -> gameMap.disable());
 
         getServer().getConsoleSender().sendMessage(prefix+"§cDisabled!");
     }
