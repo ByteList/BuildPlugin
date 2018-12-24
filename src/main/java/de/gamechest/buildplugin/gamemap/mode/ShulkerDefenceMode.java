@@ -240,6 +240,10 @@ public class ShulkerDefenceMode implements IMode {
 
         removeShulker(true);
         removeShulker(false);
+        this.redTeamShopFakePlayer.remove(player);
+        this.blueTeamShopFakePlayer.remove(player);
+        this.redTeamSpawnFakePlayer.remove(player);
+        this.blueTeamSpawnFakePlayer.remove(player);
 
         configuration.set("team.red.spawn", this.redTeamSpawnLocation.getX()+";"+this.redTeamSpawnLocation.getY()+";"+
                 this.redTeamSpawnLocation.getZ()+";"+this.redTeamSpawnLocation.getYaw()+";"+this.redTeamSpawnLocation.getPitch());

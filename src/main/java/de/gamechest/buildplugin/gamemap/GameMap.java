@@ -148,17 +148,15 @@ public class GameMap implements Listener {
     }
 
     public void export() {
-        player.sendMessage("§8\u00BB §7Die Welt wird erxportiert...");
+        player.closeInventory();
+        player.sendMessage("§8\u00BB §7Die Welt wird exportiert...");
         if(!this.mode.export(this.player, this.configuration)) {
-            player.closeInventory();
             return;
         }
         set("displayname", this.name).set("game", this.gameMode.getMode());
         set("item.material", iconItemStack.getType().name()).set("item.data", ""+iconItemStack.getData().getData());
         saveConfig();
         disable();
-
-        Bukkit.unloadWorld(this.world, true);
 
         try {
             File world = new File(this.directory, "./world/");
@@ -171,7 +169,7 @@ public class GameMap implements Listener {
             e.printStackTrace();
         }
 
-        player.sendMessage("§8\u00BB §7Die Welt wurde erfolgreich exportiert: §e"+this.name);
+        player.sendMessage("§8\u00BB §aDie Welt wurde erfolgreich exportiert: §e"+this.name);
     }
 
     public void disable() {
