@@ -30,7 +30,7 @@ public class ClickAttackMode implements IMode {
     }
 
     @Override
-    public void disable(Player player) {
+    public void disable() {
 
     }
 

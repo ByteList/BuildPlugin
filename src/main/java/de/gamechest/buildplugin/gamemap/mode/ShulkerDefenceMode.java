@@ -5,17 +5,12 @@ import de.gamechest.buildplugin.BuildPlugin;
 import de.gamechest.buildplugin.gamemap.GameMap;
 import de.gamechest.buildplugin.gamemap.GameMode;
 import de.gamechest.buildplugin.gamemap.IMode;
-import de.gamechest.buildplugin.gamemap.mode.shulkerdefence.ShopFakePlayer;
-import de.gamechest.buildplugin.gamemap.mode.shulkerdefence.SpawnFakePlayer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Shulker;
+import org.bukkit.entity.*;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -44,8 +39,8 @@ public class ShulkerDefenceMode implements IMode {
     private Location redTeamSpawnLocation, blueTeamSpawnLocation, redTeamShopLocation, blueTeamShopLocation, redTeamShulkerLocation, blueTeamShulkerLocation;
     private final ArrayList<Location> bronzeSpawnLocations = new ArrayList<>(), silverSpawnLocations = new ArrayList<>(), goldSpawnLocations = new ArrayList<>();
 
-    private ShopFakePlayer redTeamShopFakePlayer, blueTeamShopFakePlayer;
-    private SpawnFakePlayer redTeamSpawnFakePlayer, blueTeamSpawnFakePlayer;
+    private Villager redTeamShopVillager, blueTeamShopVillager;
+    private Zombie redTeamSpawnZombie, blueTeamSpawnZombie;
     private Shulker redTeamShulker, blueTeamShulker;
 
     public ShulkerDefenceMode(GameMap gameMap) {
@@ -69,10 +64,10 @@ public class ShulkerDefenceMode implements IMode {
 
         spawnShulker(true);
         spawnShulker(false);
-        spawnSpawnFakePlayer(gameMap.getPlayer(), true);
-        spawnSpawnFakePlayer(gameMap.getPlayer(), false);
-        spawnShopFakePlayer(gameMap.getPlayer(), true);
-        spawnShopFakePlayer(gameMap.getPlayer(), false);
+        spawnSpawnZombie(true);
+        spawnSpawnZombie(false);
+        spawnShopVillager(true);
+        spawnShopVillager(false);
     }
 
     private Location locationFromString(String string) {
@@ -139,71 +134,75 @@ public class ShulkerDefenceMode implements IMode {
         }
     }
 
-    private void spawnSpawnFakePlayer(Player player, boolean redTeam) {
+    private void spawnSpawnZombie(boolean redTeam) {
+        removeSpawnZombie(redTeam);
+
         if(redTeam) {
-            if(this.redTeamSpawnFakePlayer != null) {
-                this.redTeamSpawnFakePlayer.remove(player);
-            }
             if(this.redTeamSpawnLocation != null) {
-                this.redTeamSpawnFakePlayer = new SpawnFakePlayer(this.redTeamSpawnLocation, "§c");
-                this.redTeamSpawnFakePlayer.create(player);
+                Zombie zombie = (Zombie) gameMap.getWorld().spawnEntity(this.redTeamSpawnLocation, EntityType.ZOMBIE);
+                zombie.setAI(false);
+                zombie.setCustomName("§cSpawn");
+                zombie.setCustomNameVisible(true);
+                this.redTeamSpawnZombie = zombie;
             }
             return;
         }
 
-        if(this.blueTeamSpawnFakePlayer != null) {
-            this.blueTeamSpawnFakePlayer.remove(player);
-        }
         if(this.blueTeamSpawnLocation != null) {
-            this.blueTeamSpawnFakePlayer = new SpawnFakePlayer(this.blueTeamSpawnLocation, "§b");
-            this.blueTeamSpawnFakePlayer.create(player);
+            Zombie zombie = (Zombie) gameMap.getWorld().spawnEntity(this.blueTeamSpawnLocation, EntityType.ZOMBIE);
+            zombie.setAI(false);
+            zombie.setCustomName("§bSpawn");
+            zombie.setCustomNameVisible(true);
+            this.blueTeamSpawnZombie = zombie;
         }
     }
 
-    private void removeSpawnFakePlayer(Player player, boolean redTeam) {
+    private void removeSpawnZombie(boolean redTeam) {
         if(redTeam) {
-            if(this.redTeamSpawnFakePlayer != null) {
-                this.redTeamSpawnFakePlayer.remove(player);
+            if(this.redTeamSpawnZombie != null) {
+                this.redTeamSpawnZombie.remove();
             }
             return;
         }
 
-        if(this.blueTeamSpawnFakePlayer != null) {
-            this.blueTeamSpawnFakePlayer.remove(player);
+        if(this.blueTeamSpawnZombie != null) {
+            this.blueTeamSpawnZombie.remove();
         }
     }
 
-    private void spawnShopFakePlayer(Player player, boolean redTeam) {
+    private void spawnShopVillager(boolean redTeam) {
+        removeShopVillager(redTeam);
+
         if(redTeam) {
-            if(this.redTeamShopFakePlayer != null) {
-                this.redTeamShopFakePlayer.remove(player);
-            }
             if(this.redTeamShopLocation != null) {
-                this.redTeamShopFakePlayer = new ShopFakePlayer(this.redTeamShopLocation, "§c");
-                this.redTeamShopFakePlayer.create(player);
+                Villager villager = (Villager) gameMap.getWorld().spawnEntity(this.redTeamShopLocation, EntityType.VILLAGER);
+                villager.setAI(false);
+                villager.setCustomName("§cDealer");
+                villager.setCustomNameVisible(true);
+                this.redTeamShopVillager = villager;
             }
             return;
         }
 
-        if(this.blueTeamShopFakePlayer != null) {
-            this.blueTeamShopFakePlayer.remove(player);
-        }
         if(this.blueTeamShopLocation != null) {
-            this.blueTeamShopFakePlayer = new ShopFakePlayer(this.blueTeamShopLocation, "§b");
-            this.blueTeamShopFakePlayer.create(player);
+            Villager villager = (Villager) gameMap.getWorld().spawnEntity(this.blueTeamShopLocation, EntityType.VILLAGER);
+            villager.setAI(false);
+            villager.setCustomName("§bDealer");
+            villager.setCustomNameVisible(true);
+            this.blueTeamShopVillager = villager;
         }
     }
 
-    private void removeShopFakePlayer(Player player, boolean redTeam) {
+    private void removeShopVillager(boolean redTeam) {
         if(redTeam) {
-            if(this.redTeamShopFakePlayer != null) {
-                this.redTeamShopFakePlayer.remove(player);
+            if(this.redTeamShopVillager != null) {
+                this.redTeamShopVillager.remove();
             }
             return;
         }
 
-        if(this.blueTeamShopFakePlayer != null) {
-            this.blueTeamShopFakePlayer.remove(player);
+        if(this.blueTeamShopVillager != null) {
+            this.blueTeamShopVillager.remove();
         }
     }
 
@@ -294,13 +293,13 @@ public class ShulkerDefenceMode implements IMode {
     }
 
     @Override
-    public void disable(Player player) {
+    public void disable() {
         removeShulker(true);
         removeShulker(false);
-        removeSpawnFakePlayer(player, true);
-        removeSpawnFakePlayer(player, false);
-        removeShopFakePlayer(player, true);
-        removeShopFakePlayer(player, false);
+        removeSpawnZombie(true);
+        removeSpawnZombie(false);
+        removeShopVillager(true);
+        removeShopVillager(false);
     }
 
     @Override
@@ -311,11 +310,11 @@ public class ShulkerDefenceMode implements IMode {
                 switch (e.getAction()) {
                     case RIGHT_CLICK_AIR:
                         this.redTeamSpawnLocation = e.getPlayer().getLocation();
-                        spawnSpawnFakePlayer(e.getPlayer(), true);
+                        spawnSpawnZombie(true);
                         break;
                     case LEFT_CLICK_AIR:
                         this.blueTeamSpawnLocation = e.getPlayer().getLocation();
-                        spawnSpawnFakePlayer(e.getPlayer(), false);
+                        spawnSpawnZombie(false);
                         break;
                     default:
                         e.getPlayer().sendMessage("§8\u00BB §cUngültige Aktion!");
@@ -326,11 +325,11 @@ public class ShulkerDefenceMode implements IMode {
                 e.setCancelled(true);
                 if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
                     this.redTeamShopLocation = e.getPlayer().getLocation();
-                    spawnShopFakePlayer(e.getPlayer(), true);
+                    spawnShopVillager(true);
                 } else
                 if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                     this.blueTeamShopLocation = e.getPlayer().getLocation();
-                    spawnShopFakePlayer(e.getPlayer(), false);
+                    spawnShopVillager(false);
                 } else
                     e.getPlayer().sendMessage("§8\u00BB §cUngültige Aktion!");
                 break;
