@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Shulker;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -34,22 +35,52 @@ import java.util.ArrayList;
 public class ShulkerDefenceMode implements IMode {
 
     private final BuildPlugin buildPlugin = BuildPlugin.getInstance();
+    private final GameMap gameMap;
+
 
     @Getter
     private final GameMode mode = GameMode.SHULKER_DEFENCE;
 
-    private Location redTeamSpawnLocation, blueTeamSpawnLocation, redTeamShopLocation, blueTeamShopLocation;
+    private Location redTeamSpawnLocation, blueTeamSpawnLocation, redTeamShopLocation, blueTeamShopLocation, redTeamShulkerLocation, blueTeamShulkerLocation;
     private final ArrayList<Location> bronzeSpawnLocations = new ArrayList<>(), silverSpawnLocations = new ArrayList<>(), goldSpawnLocations = new ArrayList<>();
 
     private ShopFakePlayer redTeamShopFakePlayer, blueTeamShopFakePlayer;
     private SpawnFakePlayer redTeamSpawnFakePlayer, blueTeamSpawnFakePlayer;
 
     public ShulkerDefenceMode(GameMap gameMap) {
+        this.gameMap = gameMap;
+
+        this.redTeamSpawnLocation = locationFromString(gameMap.getConfiguration().getString("team.red.spawn"));
+        this.blueTeamSpawnLocation = locationFromString(gameMap.getConfiguration().getString("team.blue.spawn"));
+        this.redTeamShopLocation = locationFromString(gameMap.getConfiguration().getString("team.red.shop"));
+        this.blueTeamShopLocation = locationFromString(gameMap.getConfiguration().getString("team.blue.shop"));
+        this.redTeamShulkerLocation = locationFromString(gameMap.getConfiguration().getString("team.red.shulker"));
+        this.blueTeamShulkerLocation = locationFromString(gameMap.getConfiguration().getString("team.blue.shulker"));
+        gameMap.getConfiguration().getStringList("drop.bronze.locations").forEach(s -> bronzeSpawnLocations.add(locationFromString(s)));
+        gameMap.getConfiguration().getStringList("drop.silver.locations").forEach(s -> silverSpawnLocations.add(locationFromString(s)));
+        gameMap.getConfiguration().getStringList("drop.gold.locations").forEach(s -> goldSpawnLocations.add(locationFromString(s)));
+
         gameMap.getTasks().add(Bukkit.getScheduler().scheduleSyncRepeatingTask(buildPlugin, ()-> {
             new ArrayList<>(bronzeSpawnLocations).forEach(location -> spawnDrop("bronze", location));
             new ArrayList<>(silverSpawnLocations).forEach(location -> spawnDrop("silver", location));
             new ArrayList<>(goldSpawnLocations).forEach(location -> spawnDrop("gold", location));
         }, 20L, 20L));
+
+        spawnShulker(true);
+        spawnShulker(false);
+        spawnSpawnFakePlayer(gameMap.getPlayer(), true);
+        spawnSpawnFakePlayer(gameMap.getPlayer(), false);
+        spawnShopFakePlayer(gameMap.getPlayer(), true);
+        spawnShopFakePlayer(gameMap.getPlayer(), false);
+    }
+
+    private Location locationFromString(String string) {
+        if(string == null) return null;
+
+        String[] splitted = string.split(";");
+        return new Location(gameMap.getWorld(),
+                Double.valueOf(splitted[0]), Double.valueOf(splitted[1]), Double.valueOf(splitted[2]),
+                Float.valueOf(splitted[3]),Float.valueOf(splitted[4]));
     }
 
     private void spawnDrop(String drop, Location location) {
@@ -69,6 +100,25 @@ public class ShulkerDefenceMode implements IMode {
 
         Item item = location.getWorld().dropItemNaturally(location, itemStack);
         Bukkit.getScheduler().runTaskLaterAsynchronously(buildPlugin, item::remove, 40L);
+    }
+
+    private void spawnShulker(boolean redTeam) {
+        if(redTeam) {
+            if(this.redTeamShulkerLocation != null) {
+                Shulker shulker = (Shulker) gameMap.getWorld().spawnEntity(this.redTeamShulkerLocation, EntityType.SHULKER);
+                shulker.setAI(false);
+                shulker.setCustomName("§cShulker");
+                shulker.setCustomNameVisible(true);
+            }
+            return;
+        }
+
+        if(this.blueTeamShulkerLocation != null) {
+            Shulker shulker = (Shulker) gameMap.getWorld().spawnEntity(this.blueTeamShulkerLocation, EntityType.SHULKER);
+            shulker.setAI(false);
+            shulker.setCustomName("§bShulker");
+            shulker.setCustomNameVisible(true);
+        }
     }
 
     private void spawnSpawnFakePlayer(Player player, boolean redTeam) {
@@ -121,21 +171,64 @@ public class ShulkerDefenceMode implements IMode {
                 .displayname("§6Set Spawn").lore("§eDeine Position wird übernommen", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
         inventory.setItem(1, ItemBuilder.newBuilder(new SpawnEgg(EntityType.GUARDIAN).toItemStack())
                 .displayname("§6Set Shop").lore("§eDeine Position wird übernommen", "§7Rechtsklick: §cTeam Rot", "§7Linksklick: §9Team Blau").get());
-
-        inventory.setItem(3, ItemBuilder.newBuilder(Material.CLAY_BRICK)
+        inventory.setItem(2, ItemBuilder.newBuilder(Material.BED)
+                .displayname("§6Set Shulker").lore("§eDeine Position wird übernommen").get());
+        inventory.setItem(4, ItemBuilder.newBuilder(Material.CLAY_BRICK)
                 .displayname("§6Set Bronze-Drop").lore("§eDeine Position wird übernommen").get());
-        inventory.setItem(4, ItemBuilder.newBuilder(Material.IRON_INGOT)
+        inventory.setItem(5, ItemBuilder.newBuilder(Material.IRON_INGOT)
                 .displayname("§6Set Silver-Drop").lore("§eDeine Position wird übernommen").get());
-        inventory.setItem(5, ItemBuilder.newBuilder(Material.GOLD_INGOT)
+        inventory.setItem(6, ItemBuilder.newBuilder(Material.GOLD_INGOT)
                 .displayname("§6Set Gold-Drop").lore("§eDeine Position wird übernommen").get());
     }
 
     @Override
-    public void export(YamlConfiguration configuration) {
+    public boolean export(Player player, YamlConfiguration configuration) {
+        if(this.redTeamSpawnLocation == null) {
+            player.sendMessage("§8\u00BB §cRed Team Spawn not set!");
+            return false;
+        }
+        if(this.blueTeamSpawnLocation == null) {
+            player.sendMessage("§8\u00BB §cBlue Team Spawn not set!");
+            return false;
+        }
+        if(this.redTeamShopLocation == null) {
+            player.sendMessage("§8\u00BB §cRed Team Shop not set!");
+            return false;
+        }
+        if(this.blueTeamShopLocation == null) {
+            player.sendMessage("§8\u00BB §cBlue Team Shop not set!");
+            return false;
+        }
+        if(this.redTeamShulkerLocation == null) {
+            player.sendMessage("§8\u00BB §cRed Team Shulker not set!");
+            return false;
+        }
+        if(this.blueTeamShulkerLocation == null) {
+            player.sendMessage("§8\u00BB §cBlue Team Shulker not set!");
+            return false;
+        }
+        if(this.bronzeSpawnLocations.size() == 0) {
+            player.sendMessage("§8\u00BB §cBronze Spawn Locations not set!");
+            return false;
+        }
+        if(this.silverSpawnLocations.size() == 0) {
+            player.sendMessage("§8\u00BB §cSilver Spawn Locations not set!");
+            return false;
+        }
+        if(this.goldSpawnLocations.size() == 0) {
+            player.sendMessage("§8\u00BB §cGold Spawn Locations not set!");
+            return false;
+        }
+
         configuration.set("team.red.spawn", this.redTeamSpawnLocation.getX()+";"+this.redTeamSpawnLocation.getY()+";"+
                 this.redTeamSpawnLocation.getZ()+";"+this.redTeamSpawnLocation.getYaw()+";"+this.redTeamSpawnLocation.getPitch());
         configuration.set("team.blue.spawn", this.blueTeamSpawnLocation.getX()+";"+this.blueTeamSpawnLocation.getY()+";"+
                 this.blueTeamSpawnLocation.getZ()+";"+this.blueTeamSpawnLocation.getYaw()+";"+this.blueTeamSpawnLocation.getPitch());
+
+        configuration.set("team.red.shulker", this.redTeamShulkerLocation.getX()+";"+this.redTeamShulkerLocation.getY()+";"+
+                this.redTeamShulkerLocation.getZ());
+        configuration.set("team.blue.shulker", this.blueTeamShulkerLocation.getX()+";"+this.blueTeamShulkerLocation.getY()+";"+
+                this.blueTeamShulkerLocation.getZ());
 
         configuration.set("team.red.shop", this.redTeamShopLocation.getX()+";"+this.redTeamShopLocation.getY()+";"+
                 this.redTeamShopLocation.getZ());
@@ -153,6 +246,7 @@ public class ShulkerDefenceMode implements IMode {
         configuration.set("drop.bronze.delay", 1);
         configuration.set("drop.silver.delay", 8);
         configuration.set("drop.gold.delay", 20);
+        return true;
     }
 
     @Override
@@ -183,6 +277,18 @@ public class ShulkerDefenceMode implements IMode {
                 if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
                     this.blueTeamShopLocation = e.getPlayer().getLocation();
                     spawnShopFakePlayer(e.getPlayer(), false);
+                } else
+                    e.getPlayer().sendMessage("§8\u00BB §cUngültige Aktion!");
+                break;
+            case "§6Set Shulker":
+                e.setCancelled(true);
+                if(e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    this.redTeamShulkerLocation = e.getPlayer().getLocation();
+                    spawnShulker(true);
+                } else
+                if(e.getAction() == Action.LEFT_CLICK_AIR || e.getAction() == Action.LEFT_CLICK_BLOCK) {
+                    this.blueTeamShulkerLocation = e.getPlayer().getLocation();
+                    spawnShulker(false);
                 } else
                     e.getPlayer().sendMessage("§8\u00BB §cUngültige Aktion!");
                 break;

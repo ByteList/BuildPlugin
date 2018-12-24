@@ -18,7 +18,7 @@ public interface IMode {
 
     public void loadInventory(Player player);
 
-    public void export(YamlConfiguration configuration);
+    public boolean export(Player player, YamlConfiguration configuration);
 
     public void onInteract(PlayerInteractEvent e);
 

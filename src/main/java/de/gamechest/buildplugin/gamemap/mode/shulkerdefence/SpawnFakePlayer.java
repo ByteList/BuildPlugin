@@ -46,6 +46,7 @@ public class SpawnFakePlayer {
                     if (player.getLocation().distance(this.fakePlayerLocation) <= this.spawnDistance) {
                         if(!fakePlayer.isSpawned()) {
                             fakePlayer.spawn();
+                            fakePlayer.lookAtLocation(this.fakePlayerLocation);
                             fakePlayer.removeFromTabList();
                         }
                     } else {

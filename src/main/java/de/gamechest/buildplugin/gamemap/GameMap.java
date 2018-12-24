@@ -143,7 +143,10 @@ public class GameMap implements Listener {
 
     public void export() {
         player.sendMessage("§8\u00BB §7Die Welt wird erxportiert...");
-        this.mode.export(this.configuration);
+        if(!this.mode.export(this.player, this.configuration)) {
+            player.closeInventory();
+            return;
+        }
         set("displayname", this.name).set("game", this.gameMode.getMode());
         set("item.material", iconItemStack.getType().name()).set("item.data", ""+iconItemStack.getData().getData());
         saveConfig();
@@ -159,17 +162,17 @@ public class GameMap implements Listener {
             e.printStackTrace();
         }
 
-        player.sendMessage("§8\u00BB §7Die Welt wurde erfolgreich erxportiert: §e"+this.name);
-
-        player.getInventory().clear();
-        player.getInventory().setArmorContents(this.armorContents);
-        player.getInventory().setContents(this.contents);
+        player.sendMessage("§8\u00BB §7Die Welt wurde erfolgreich exportiert: §e"+this.name);
     }
 
     public void disable() {
         HandlerList.unregisterAll(this);
         this.tasks.forEach(integer -> Bukkit.getScheduler().cancelTask(integer));
         buildPlugin.getPlayerManager().removeGameMap(player.getUniqueId());
+
+        player.getInventory().clear();
+        player.getInventory().setArmorContents(this.armorContents);
+        player.getInventory().setContents(this.contents);
     }
 
     @EventHandler
@@ -221,7 +224,7 @@ public class GameMap implements Listener {
                         if(e.getSlot() != 2) {
                             e.setCancelled(true);
                         } else {
-                            this.iconItemStack = inventory.getItem(2);
+                            this.iconItemStack = e.getCurrentItem();
                         }
                         break;
                 }
