@@ -158,18 +158,20 @@ public class GameMap implements Listener {
         saveConfig();
         disable();
 
-        try {
-            File world = new File(this.directory, "./world/");
-            if(world.exists()) {
-                world.delete();
+        Bukkit.getScheduler().runTaskLater(buildPlugin, ()-> {
+            try {
+                File world = new File(this.directory, "./world/");
+                if(world.exists()) {
+                    world.delete();
+                }
+                world.mkdirs();
+                FileUtils.copyDirectory(this.world.getWorldFolder(), world);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            world.mkdirs();
-            FileUtils.copyDirectory(this.world.getWorldFolder(), world);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        this.player.sendMessage("§8\u00BB §aDie Welt wurde erfolgreich exportiert: §e"+this.name);
+            this.player.sendMessage("§8\u00BB §aDie Welt wurde erfolgreich exportiert: §e"+this.name);
+        }, 80L);
     }
 
     public void disable() {
