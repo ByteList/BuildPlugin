@@ -143,6 +143,7 @@ public class ShulkerDefenceMode implements IMode {
                 zombie.setAI(false);
                 zombie.setCustomName("§cSpawn");
                 zombie.setCustomNameVisible(true);
+                zombie.setCollidable(false);
                 this.redTeamSpawnZombie = zombie;
             }
             return;
@@ -153,6 +154,7 @@ public class ShulkerDefenceMode implements IMode {
             zombie.setAI(false);
             zombie.setCustomName("§bSpawn");
             zombie.setCustomNameVisible(true);
+            zombie.setCollidable(false);
             this.blueTeamSpawnZombie = zombie;
         }
     }
@@ -179,6 +181,7 @@ public class ShulkerDefenceMode implements IMode {
                 villager.setAI(false);
                 villager.setCustomName("§cDealer");
                 villager.setCustomNameVisible(true);
+                villager.setCollidable(false);
                 this.redTeamShopVillager = villager;
             }
             return;
@@ -189,6 +192,7 @@ public class ShulkerDefenceMode implements IMode {
             villager.setAI(false);
             villager.setCustomName("§bDealer");
             villager.setCustomNameVisible(true);
+            villager.setCollidable(false);
             this.blueTeamShopVillager = villager;
         }
     }
