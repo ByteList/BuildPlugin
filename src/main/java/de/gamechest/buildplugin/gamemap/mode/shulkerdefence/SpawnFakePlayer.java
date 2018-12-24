@@ -1,8 +1,10 @@
 package de.gamechest.buildplugin.gamemap.mode.shulkerdefence;
 
 import de.gamechest.GameChest;
+import de.gamechest.buildplugin.BuildPlugin;
 import de.gamechest.fakeplayer.FakePlayer;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -47,7 +49,7 @@ public class SpawnFakePlayer {
                         if(!fakePlayer.isSpawned()) {
                             fakePlayer.spawn();
                             fakePlayer.lookAtLocation(this.fakePlayerLocation);
-                            fakePlayer.removeFromTabList();
+                            Bukkit.getScheduler().runTaskLaterAsynchronously(BuildPlugin.getInstance(), fakePlayer::removeFromTabList, 20L);
                         }
                     } else {
                         fakePlayer.destroy();

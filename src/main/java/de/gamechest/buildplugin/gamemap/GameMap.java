@@ -66,7 +66,7 @@ public class GameMap implements Listener {
         this.gameMode = gameMode;
         this.name = name;
 
-        this.directory = new File(new File(BuildPlugin.getInstance().getGameMapRootDirectory(), gameMode.getMode()), name+"/");
+        this.directory = new File(new File(buildPlugin.getGameMapRootDirectory(), gameMode.getMode()), name+"/");
         this.configFile = new File(this.directory, "config.yml");
         this.configuration = YamlConfiguration.loadConfiguration(this.configFile);
 
@@ -74,6 +74,12 @@ public class GameMap implements Listener {
             this.directory.mkdirs();
             set("displayname", name).set("game", gameMode.getMode()).saveConfig();
             this.iconItemStack = ItemBuilder.newBuilder(Material.SAND).get();
+        } else {
+            this.name = this.configuration.getString("displayname");
+            this.iconItemStack = ItemBuilder.newBuilder(
+                    Material.getMaterial(this.configuration.getString("item.material")),
+                    Byte.valueOf(this.configuration.getString("item.data"))
+            ).get();
         }
 
         switch (gameMode) {
