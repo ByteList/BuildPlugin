@@ -46,6 +46,7 @@ public class ShulkerDefenceMode implements IMode {
 
     private ShopFakePlayer redTeamShopFakePlayer, blueTeamShopFakePlayer;
     private SpawnFakePlayer redTeamSpawnFakePlayer, blueTeamSpawnFakePlayer;
+    private Shulker redTeamShulker, blueTeamShulker;
 
     public ShulkerDefenceMode(GameMap gameMap) {
         this.gameMap = gameMap;
@@ -103,12 +104,15 @@ public class ShulkerDefenceMode implements IMode {
     }
 
     private void spawnShulker(boolean redTeam) {
+        removeShulker(redTeam);
+
         if(redTeam) {
             if(this.redTeamShulkerLocation != null) {
                 Shulker shulker = (Shulker) gameMap.getWorld().spawnEntity(this.redTeamShulkerLocation, EntityType.SHULKER);
                 shulker.setAI(false);
                 shulker.setCustomName("§cShulker");
                 shulker.setCustomNameVisible(true);
+                this.redTeamShulker = shulker;
             }
             return;
         }
@@ -118,6 +122,20 @@ public class ShulkerDefenceMode implements IMode {
             shulker.setAI(false);
             shulker.setCustomName("§bShulker");
             shulker.setCustomNameVisible(true);
+            this.blueTeamShulker = shulker;
+        }
+    }
+
+    private void removeShulker(boolean redTeam) {
+        if(redTeam) {
+            if(this.redTeamShulker != null) {
+                this.redTeamShulker.remove();
+            }
+            return;
+        }
+
+        if(this.blueTeamShulker != null) {
+            this.blueTeamShulker.remove();
         }
     }
 
@@ -219,6 +237,9 @@ public class ShulkerDefenceMode implements IMode {
             player.sendMessage("§8\u00BB §cGold Spawn Locations not set!");
             return false;
         }
+
+        removeShulker(true);
+        removeShulker(false);
 
         configuration.set("team.red.spawn", this.redTeamSpawnLocation.getX()+";"+this.redTeamSpawnLocation.getY()+";"+
                 this.redTeamSpawnLocation.getZ()+";"+this.redTeamSpawnLocation.getYaw()+";"+this.redTeamSpawnLocation.getPitch());
